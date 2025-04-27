@@ -1,0 +1,8 @@
+example_data = [
+    {
+        'cpu': 20.5,
+        'memory': 45.3,
+        'network': {'connections': 10}
+    },
+    # ... بيانات أخرى
+]

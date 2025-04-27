@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <title>Real-Time Monitoring</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <div id="dashboard">
+        <div id="cpuChart"></div>
+        <div id="memoryChart"></div>
+        <div id="alerts"></div>
+    </div>
+
+    <script>
+        const socket = io('http://localhost:5001');
+
+        // تحديث الرسوم البيانية
+        socket.on('env_update', (data) => {
+            updateChart('cpuChart', data.cpu, 'CPU Usage');
+            updateChart('memoryChart', data.memory, 'Memory Usage');
+
+            if (data.recommendation) {
+                document.getElementById('alerts').innerHTML +=
+                    `<div class="alert">${data.recommendation}</div>`;
+            }
+        });
+
+        function updateChart(elementId, value, title) {
+            Plotly.newPlot(elementId, [{
+                values: [value, 100 - value],
+                type: 'pie',
+                hole: .4,
+                name: title
+            }], {
+                title: title
+            });
+        }
+    </script>
+</body>
+
+</html>
